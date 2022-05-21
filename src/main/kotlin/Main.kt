@@ -1,5 +1,4 @@
 
-
 fun main() {
-    println("Hello")
+    MinesweeperOnlineSolver(Resources.FirefoxDriverPath.path).runSolver()
 }

@@ -1,15 +1,17 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.6.21"
     application
 }
 
-group = "com.sellithy"
-version = "1.0"
-
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    implementation("com.sikulix:sikulixapi:2.0.5")
+    implementation("org.seleniumhq.selenium:selenium-firefox-driver:4.1.4")
 }
 
 tasks.withType<KotlinCompile> {
