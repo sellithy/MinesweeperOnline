@@ -1,5 +1,4 @@
 import grid.CellState
-import solver.ActionType
 import grid.Grid
 import grid.Position
 import grid.asState
@@ -7,9 +6,10 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.interactions.Actions
+import solver.ActionType
 import solver.solve
 
-class MinesweeperOnlineSolver(path: String) {
+class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = false) {
     init {
         System.setProperty("webdriver.gecko.driver", path)
     }
@@ -26,18 +26,16 @@ class MinesweeperOnlineSolver(path: String) {
             updateUnknownPositions()
         } while (solve1Step())
 
-        if (grid.isNotSolved)
-            println("Could not solve the grid")
+        if (grid.isNotSolved) println("Could not solve the grid")
     }
 
     private fun updateUnknownPositions() {
         for (pos in grid.unknownPositions) {
             val classes = posToDiv[pos]!!.getAttribute("class").split(" ")
 
-            if (classes.contains("hd_opened"))
-                grid[pos] = classes.first { it.startsWith("hd_type") }.last().digitToInt().asState
-            else if (classes.contains("hd_flag"))
-                grid[pos] = CellState.FLAG
+            if (classes.contains("hd_opened")) grid[pos] =
+                classes.first { it.startsWith("hd_type") }.last().digitToInt().asState
+            else if (classes.contains("hd_flag")) grid[pos] = CellState.FLAG
         }
     }
 
@@ -57,7 +55,11 @@ class MinesweeperOnlineSolver(path: String) {
         grid.solve().forEach { (type, pos) ->
             when (type) {
                 ActionType.OPEN -> actions.click(posToDiv[pos])
-                ActionType.FLAG -> actions.contextClick(posToDiv[pos])
+                ActionType.FLAG -> if (flagMines)
+                    actions.contextClick(posToDiv[pos])
+                else
+                    grid[pos] = CellState.FLAG
+
             }
             changed = true
         }

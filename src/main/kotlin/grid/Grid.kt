@@ -27,7 +27,10 @@ class Grid private constructor(private val cells: MutableList<GridCell>, val wid
     operator fun get(position: Position) = this[position.asIndex]
     operator fun set(position: Position, state: CellState) = cells.set(position.asIndex, GridCell(state, position))
 
-    val unknownPositions = filter { it.state == CellState.UNKNOWN }.map { it.position }
+    val unknownCells = filter { it.state == CellState.UNKNOWN }
+    val unknownPositions = unknownCells.map { it.position }
+
+    val numFlagged = count { it.state == CellState.FLAG }
 }
 
 
