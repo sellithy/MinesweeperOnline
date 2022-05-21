@@ -1,3 +1,5 @@
+package grid
+
 class Grid private constructor(private val cells: MutableList<GridCell>, val width: Int, val height: Int) :
     MutableList<GridCell> by cells {
     constructor(width: Int, height: Int) : this(

@@ -1,4 +1,10 @@
-fun Grid.solve() = mutableSetOf<CellAction>().apply {
+package solver
+
+import grid.*
+
+
+fun Grid.solve(): MutableSet<CellAction> {
+    val actions = mutableSetOf<CellAction>()
     var prevCount = -1
     while (prevCount != count()) {
         prevCount = count()

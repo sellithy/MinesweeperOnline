@@ -1,3 +1,5 @@
+package grid
+
 data class Position(val row: Int, val column: Int){
     override fun toString() = "($row, $column)"
 }

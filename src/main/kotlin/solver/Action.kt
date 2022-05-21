@@ -1,3 +1,6 @@
+package solver
+
+import grid.Position
 
 enum class ActionType { OPEN, FLAG }
 

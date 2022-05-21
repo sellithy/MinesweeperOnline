@@ -1,7 +1,13 @@
+import grid.CellState
+import solver.ActionType
+import grid.Grid
+import grid.Position
+import grid.asState
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.interactions.Actions
+import solver.solve
 
 class MinesweeperOnlineSolver(path: String) {
     init {

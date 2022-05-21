@@ -1,3 +1,5 @@
+package grid
+
 enum class CellState {
     UNKNOWN, FLAG, ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT
 }
