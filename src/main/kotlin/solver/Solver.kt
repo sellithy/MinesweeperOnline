@@ -1,36 +1,40 @@
 package solver
 
-import grid.*
+import grid.Grid
+import grid.GridCell
+import grid.hintNumber
+import grid.isHint
 
-typealias CellRule = Grid.(GridCell) -> Set<CellAction>
+// TODO Change to context(Grid, ActionQueue) when bug is fixed
+typealias CellRule = Grid.(ActionQueue, GridCell) -> Unit
 
-val cellRules = listOf<CellRule>(Grid::cellRule1, Grid::cellRule2)
+val rules = listOf<CellRule>(Grid::cellRule1, Grid::cellRule2)
 
 fun Grid.solve(): MutableSet<CellAction> {
-    val actions = mutableSetOf<CellAction>()
+    val q = ActionQueue()
     var prevCount = -1
-    while (prevCount != actions.count()) {
-        prevCount = actions.count()
+    while (prevCount != q.count()) {
+        prevCount = q.count()
 
         for (cell in this) {
             if (cell.state.isHint && cell.state.hintNumber != 0) {
-                cellRules.map { it(this, cell) }.forEach { actions += it }
+                rules.map { it(q, cell) }
             }
         }
     }
 
     if (numFlagged == 10)
-        unknownCells.forEach { actions.add(CellAction(ActionType.OPEN, it.position)) }
+        unknownCells.forEach { q.add(CellAction(ActionType.OPEN, it.position)) }
 
-    return actions
+    return q
 }
 
-fun Grid.cellRule1(cell: GridCell) = mutableSetOf<CellAction>().also { actions ->
+fun Grid.cellRule1(queue: ActionQueue, cell: GridCell) {
     if (cell.flaggedNeighbours.count() == cell.state.hintNumber)
-        cell.unknownNeighbours.forEach { actions.add(open(it.position)) }
+        cell.unknownNeighbours.forEach { queue.open(it.position) }
 }
 
-fun Grid.cellRule2(cell: GridCell) = mutableSetOf<CellAction>().also { actions ->
+fun Grid.cellRule2(queue: ActionQueue, cell: GridCell) {
     if (cell.flaggedNeighbours.count() + cell.unknownNeighbours.count() == cell.state.hintNumber)
-        cell.unknownNeighbours.forEach { actions.add(flag(it.position)) }
+        cell.unknownNeighbours.forEach { queue.flag(it.position) }
 }
