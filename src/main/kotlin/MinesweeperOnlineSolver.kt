@@ -18,8 +18,20 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
         get("https://minesweeper.online/new-game/ng")
     }
     private val actions = Actions(driver)
-    private val grid = Grid(9, 9, 10)
-    private val posToDiv = setupAndGetDivs()
+    private val grid = Grid(16, 16, 40)
+    private val posToDiv: Map<Position, WebElement>
+
+    init {
+        Thread.sleep(1000)
+        driver.findElement(By.id("level_select_12")).click()
+        Thread.sleep(1000)
+        with(driver.findElement(By.id("A43"))) {
+            findElement(By.className("start")).click()
+            posToDiv = mutableMapOf()
+            for (cell in grid) posToDiv[cell.position] =
+                findElement(By.id("cell_${cell.position.column}_${cell.position.row}"))
+        }
+    }
 
     fun runSolver() {
         do {
@@ -36,17 +48,6 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
             if (classes.contains("hd_opened")) grid[pos] =
                 classes.first { it.startsWith("hd_type") }.last().digitToInt().asState
             else if (classes.contains("hd_flag")) grid[pos] = CellState.FLAG
-        }
-    }
-
-    private fun setupAndGetDivs(): Map<Position, WebElement> {
-        Thread.sleep(2000)
-        with(driver.findElement(By.id("A43"))) {
-            findElement(By.className("start")).click()
-            val posToDiv = mutableMapOf<Position, WebElement>()
-            for (cell in grid) posToDiv[cell.position] =
-                findElement(By.id("cell_${cell.position.column}_${cell.position.row}"))
-            return posToDiv
         }
     }
 
