@@ -3,7 +3,7 @@ package solver
 import grid.Position
 
 class ActionQueue private constructor(private val actions: MutableSet<CellAction>) :
-    MutableSet<CellAction> by actions {
+    Set<CellAction> by actions {
 
     constructor(): this(mutableSetOf())
 

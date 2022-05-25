@@ -1,11 +1,16 @@
 package grid
 
-class Grid private constructor(private val cells: MutableList<GridCell>, val width: Int, val height: Int) :
+class Grid private constructor(
+    private val cells: MutableList<GridCell>,
+    val width: Int,
+    val height: Int,
+    val numMines: Int
+) :
     MutableList<GridCell> by cells {
-    constructor(width: Int, height: Int) : this(
+    constructor(width: Int, height: Int, numMines: Int) : this(
         MutableList(height * width) { index ->
             GridCell(CellState.UNKNOWN, (index / width) pos (index % width))
-        }, width, height
+        }, width, height, numMines
     )
 
     val Position.asIndex get() = row * width + column

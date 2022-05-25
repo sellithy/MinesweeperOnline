@@ -18,7 +18,7 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
         get("https://minesweeper.online/new-game/ng")
     }
     private val actions = Actions(driver)
-    private val grid = Grid(9, 9)
+    private val grid = Grid(9, 9, 10)
     private val posToDiv = setupAndGetDivs()
 
     fun runSolver() {

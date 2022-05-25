@@ -10,7 +10,7 @@ typealias CellRule = Grid.(ActionQueue, GridCell) -> Unit
 
 val rules = listOf<CellRule>(Grid::cellRule1, Grid::cellRule2)
 
-fun Grid.solve(): MutableSet<CellAction> {
+fun Grid.solve(): Set<CellAction> {
     val q = ActionQueue()
     var prevCount = -1
     while (prevCount != q.count()) {
@@ -23,8 +23,8 @@ fun Grid.solve(): MutableSet<CellAction> {
         }
     }
 
-    if (numFlagged == 10)
-        unknownCells.forEach { q.add(CellAction(ActionType.OPEN, it.position)) }
+    if (numFlagged == numMines)
+        unknownCells.forEach { q.open(it.position) }
 
     return q
 }
