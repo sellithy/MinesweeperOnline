@@ -1,7 +1,4 @@
-import grid.CellState
-import grid.Grid
-import grid.Position
-import grid.asState
+import grid.*
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.firefox.FirefoxDriver
@@ -19,7 +16,7 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
     }
     private val actions = Actions(driver)
     private val grid = Grid(16, 16, 40)
-    private val posToDiv: Map<Position, WebElement>
+    private val posToDiv: Map<IPosition, WebElement>
 
     init {
         Thread.sleep(1000)

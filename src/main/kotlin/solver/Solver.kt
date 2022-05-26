@@ -1,40 +1,38 @@
 package solver
 
-import grid.Grid
-import grid.GridCell
-import grid.hintNumber
-import grid.isHint
+import grid.*
 
 // TODO Change to context(Grid, ActionQueue) when bug is fixed
 typealias CellRule = Grid.(ActionQueue, GridCell) -> Unit
 
-val rules = listOf<CellRule>(Grid::cellRule1, Grid::cellRule2)
+val rules = listOf<CellRule>(Grid::openWhenDone, Grid::flagWhenDone, Grid::`1-1+`)
 
 fun Grid.solve(): Set<CellAction> {
-    val q = ActionQueue()
+    val queue = ActionQueue()
     var prevCount = -1
-    while (prevCount != q.count()) {
-        prevCount = q.count()
+    while (prevCount != queue.count()) {
+        prevCount = queue.count()
 
         for (cell in this) {
-            if (cell.state.isHint && cell.state.hintNumber != 0) {
-                rules.map { it(q, cell) }
+            if (cell.hintFollows { it != 0 }) {
+                rules.forEach { it(queue, cell) }
             }
         }
     }
 
+
     if (numFlagged == numMines)
-        unknownCells.forEach { q.open(it.position) }
+        with(queue) { unknownCells.openAll() }
 
-    return q
+    return queue
 }
 
-fun Grid.cellRule1(queue: ActionQueue, cell: GridCell) {
-    if (cell.flaggedNeighbours.count() == cell.state.hintNumber)
-        cell.unknownNeighbours.forEach { queue.open(it.position) }
+fun Grid.openWhenDone(queue: ActionQueue, cell: GridCell) {
+    if (cell.flaggedNeighbours.count() == cell.hintNumber)
+        cell.unknownNeighbours.forEach(queue::open)
 }
 
-fun Grid.cellRule2(queue: ActionQueue, cell: GridCell) {
-    if (cell.flaggedNeighbours.count() + cell.unknownNeighbours.count() == cell.state.hintNumber)
-        cell.unknownNeighbours.forEach { queue.flag(it.position) }
+fun Grid.flagWhenDone(queue: ActionQueue, cell: GridCell) {
+    if (cell.flaggedNeighbours.count() + cell.unknownNeighbours.count() == cell.hintNumber)
+        cell.unknownNeighbours.forEach(queue::flag)
 }

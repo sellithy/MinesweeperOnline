@@ -2,11 +2,18 @@ package grid
 
 sealed interface ICellState {
     val isHint: Boolean
+    val isUnknown: Boolean
+    val isFlag: Boolean
     val hintNumber: Int
+
+    fun hintFollows(predicate: (Int) -> Boolean) = isHint && predicate(hintNumber)
 }
 
 enum class CellState : ICellState {
     UNKNOWN, FLAG, ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT;
+
+    override val isUnknown get() = this == UNKNOWN
+    override val isFlag get() = this == FLAG
 
     override val isHint
         get() = when (this) {
