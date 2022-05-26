@@ -36,3 +36,8 @@ fun Grid.flagWhenDone(queue: ActionQueue, cell: GridCell) {
     if (cell.flaggedNeighbours.count() + cell.unknownNeighbours.count() == cell.hintNumber)
         cell.unknownNeighbours.forEach(queue::flag)
 }
+
+@Suppress("FunctionName")
+fun Grid.`1-1+`(queue: ActionQueue, cell: GridCell) {
+    throw TODO()
+}
