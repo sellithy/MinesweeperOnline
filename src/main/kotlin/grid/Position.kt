@@ -1,26 +1,21 @@
 package grid
 
-sealed interface IPosition{
-    val row: Int
-    val column: Int
-}
-
-data class Position(override val row: Int, override val column: Int): IPosition{
+data class Position(val row: Int, val column: Int){
     override fun toString() = "($row, $column)"
 }
 
-val IPosition.top get() = Position(row - 1, column)
-val IPosition.topRight get() = Position(row - 1, column + 1)
-val IPosition.topLeft get() = Position(row - 1, column - 1)
+val Position.top get() = Position(row - 1, column)
+val Position.topRight get() = Position(row - 1, column + 1)
+val Position.topLeft get() = Position(row - 1, column - 1)
 
-val IPosition.right get() = Position(row, column + 1)
-val IPosition.left get() = Position(row, column - 1)
+val Position.right get() = Position(row, column + 1)
+val Position.left get() = Position(row, column - 1)
 
-val IPosition.bottom get() = Position(row + 1, column)
-val IPosition.bottomRight get() = Position(row + 1, column + 1)
-val IPosition.bottomLeft get() = Position(row + 1, column - 1)
+val Position.bottom get() = Position(row + 1, column)
+val Position.bottomRight get() = Position(row + 1, column + 1)
+val Position.bottomLeft get() = Position(row + 1, column - 1)
 
-val IPosition.neighbours get() = sequence {
+val Position.neighbours get() = sequence {
     yield(top)
     yield(topLeft)
     yield(topRight)

@@ -1,40 +1,30 @@
 package grid
 
-sealed interface ICellState {
-    val isHint: Boolean
-    val isUnknown: Boolean
-    val isFlag: Boolean
-    val hintNumber: Int
-
-    fun hintFollows(predicate: (Int) -> Boolean) = isHint && predicate(hintNumber)
-}
-
-enum class CellState : ICellState {
+enum class CellState {
     UNKNOWN, FLAG, ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT;
-
-    override val isUnknown get() = this == UNKNOWN
-    override val isFlag get() = this == FLAG
-
-    override val isHint
-        get() = when (this) {
-            ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT -> true
-            else -> false
-        }
-
-    override val hintNumber
-        get() = when (this) {
-            ZERO -> 0
-            ONE -> 1
-            TWO -> 2
-            THREE -> 3
-            FOUR -> 4
-            FIVE -> 5
-            SIX -> 6
-            SEVEN -> 7
-            EIGHT -> 8
-            UNKNOWN, FLAG -> throw IllegalArgumentException()
-        }
 }
+
+val CellState.isHint
+    get() = when (this) {
+        CellState.ZERO, CellState.ONE, CellState.TWO, CellState.THREE, CellState.FOUR, CellState.FIVE, CellState.SIX, CellState.SEVEN, CellState.EIGHT -> true
+        else -> false
+    }
+
+val CellState.hintNumber
+    get() = when (this) {
+        CellState.ZERO -> 0
+        CellState.ONE -> 1
+        CellState.TWO -> 2
+        CellState.THREE -> 3
+        CellState.FOUR -> 4
+        CellState.FIVE -> 5
+        CellState.SIX -> 6
+        CellState.SEVEN -> 7
+        CellState.EIGHT -> 8
+        CellState.UNKNOWN, CellState.FLAG -> throw IllegalArgumentException()
+    }
+
+fun CellState.hintFollows(predicate: (Int) -> Boolean) = isHint && predicate(hintNumber)
 
 
 val Int.asState
