@@ -16,17 +16,17 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
     }
     private val actions = Actions(driver)
     private val grid = Grid(16, 16, 40)
-    private val posToDiv: Map<IPosition, WebElement>
+    private val posToDiv: Map<Position, WebElement>
 
     init {
-        Thread.sleep(1000)
+        Thread.sleep(2000)
         driver.findElement(By.id("level_select_12")).click()
         Thread.sleep(1000)
         with(driver.findElement(By.id("A43"))) {
             findElement(By.className("start")).click()
             posToDiv = mutableMapOf()
-            for (cell in grid) posToDiv[cell.position] =
-                findElement(By.id("cell_${cell.position.column}_${cell.position.row}"))
+            for ((position, _) in grid) posToDiv[position] =
+                findElement(By.id("cell_${position.column}_${position.row}"))
         }
     }
 

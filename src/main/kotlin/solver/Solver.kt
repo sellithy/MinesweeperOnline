@@ -3,9 +3,9 @@ package solver
 import grid.*
 
 // TODO Change to context(Grid, ActionQueue) when bug is fixed
-typealias CellRule = Grid.(ActionQueue, GridCell) -> Unit
+typealias CellRule = Grid.(ActionQueue, Position, CellState) -> Unit
 
-val rules = listOf<CellRule>(Grid::openWhenDone, Grid::flagWhenDone, Grid::`1-1+`)
+val rules = listOf<CellRule>(Grid::openWhenDone, Grid::flagWhenDone)
 
 fun Grid.solve(): Set<CellAction> {
     val queue = ActionQueue()
@@ -13,31 +13,25 @@ fun Grid.solve(): Set<CellAction> {
     while (prevCount != queue.count()) {
         prevCount = queue.count()
 
-        for (cell in this) {
-            if (cell.hintFollows { it != 0 }) {
-                rules.forEach { it(queue, cell) }
+        for ((position, state) in this) {
+            if (state.hintFollows { it != 0 }) {
+                rules.forEach { it(this, queue, position, this[position]!!) }
             }
         }
     }
 
-
     if (numFlagged == numMines)
-        with(queue) { unknownCells.openAll() }
+        with(queue) { unknownPositions.openAll() }
 
     return queue
 }
 
-fun Grid.openWhenDone(queue: ActionQueue, cell: GridCell) {
-    if (cell.flaggedNeighbours.count() == cell.hintNumber)
-        cell.unknownNeighbours.forEach(queue::open)
+fun Grid.openWhenDone(queue: ActionQueue, position: Position, state: CellState) {
+    if (state.hintFollows(position.numNeighbouringFlags::equals))
+        with(queue) { position.neighbouringUnknowns.positions.openAll() }
 }
 
-fun Grid.flagWhenDone(queue: ActionQueue, cell: GridCell) {
-    if (cell.flaggedNeighbours.count() + cell.unknownNeighbours.count() == cell.hintNumber)
-        cell.unknownNeighbours.forEach(queue::flag)
-}
-
-@Suppress("FunctionName")
-fun Grid.`1-1+`(queue: ActionQueue, cell: GridCell) {
-    throw TODO()
+fun Grid.flagWhenDone(queue: ActionQueue, position: Position, state: CellState) {
+    if (state.hintFollows((position.numNeighbouringFlags + position.numNeighbouringUnknowns)::equals))
+        with(queue) { position.neighbouringUnknowns.positions.flagAll() }
 }
