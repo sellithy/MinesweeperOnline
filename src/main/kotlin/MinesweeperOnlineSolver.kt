@@ -44,7 +44,7 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
 
             if (classes.contains("hd_opened")) grid[pos] =
                 classes.first { it.startsWith("hd_type") }.last().digitToInt().asState
-            else if (classes.contains("hd_flag")) grid[pos] = CellState.FLAG
+            else if (classes.contains("hd_flag")) grid[pos] = RealCellState.FLAG
         }
     }
 
@@ -56,7 +56,7 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
                 ActionType.FLAG -> if (flagMines)
                     actions.contextClick(posToDiv[pos])
                 else
-                    grid[pos] = CellState.FLAG
+                    grid[pos] = RealCellState.FLAG
 
             }
             changed = true

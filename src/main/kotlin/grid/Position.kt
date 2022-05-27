@@ -27,5 +27,3 @@ val Position.neighbours get() = sequence {
     yield(bottomLeft)
     yield(bottomRight)
 }
-
-infix fun Int.pos(that: Int) = Position(this, that)
