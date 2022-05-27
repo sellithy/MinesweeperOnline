@@ -3,7 +3,8 @@ package solver
 import grid.*
 
 // TODO Change to context(Grid, ActionQueue) when bug is fixed
-typealias CellRule = Grid.(ActionQueue, Position, CellState) -> Unit
+// This should be a rule that is applied on a cell with a hint and that hint is not 0
+typealias HintRule = Grid.(ActionQueue, Position, CellState) -> Unit
 
 val rules = listOf<CellRule>(Grid::openWhenDone, Grid::flagWhenDone)
 
