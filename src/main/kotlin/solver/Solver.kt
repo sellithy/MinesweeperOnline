@@ -15,7 +15,7 @@ fun Grid.solve(): Set<CellAction> {
 
         for ((position, state) in this) {
             if (state.hintFollows { it != 0 }) {
-                rules.forEach { it(this, queue, position, this[position]!!) }
+                rules.forEach { it(this, queue, position, state) }
             }
         }
     }
