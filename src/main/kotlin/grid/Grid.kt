@@ -1,16 +1,16 @@
 package grid
 
 @Suppress("Unused")
-class Grid private constructor(
-    private val cells: MutableMap<Position, RealCellState>, val numMines: Int,
+open class Grid private constructor(
+    private val cells: MutableMap<Position, RealCellState>
 ) : MutableMap<Position, RealCellState> by cells {
 
     // region Constructors
-    constructor(width: Int, height: Int, numMines: Int) : this(
+    constructor(width: Int, height: Int) : this(
         mutableMapOf<Position, RealCellState>().apply {
             for (row in 0 until height) for (col in 0 until width)
                 (row pos col).let { this[it] = RealCellState.UNKNOWN }
-        }, numMines
+        }
     )
     //endregion
 
@@ -26,6 +26,7 @@ class Grid private constructor(
 
     // region Operators
     operator fun set(p: Position, state: RealCellState) = if (p in this) cells[p] = state else null
+    operator fun set(row: Int, col: Int, state: RealCellState) = set((row pos col), state)
     // endregion
 
     // region Position extensions
