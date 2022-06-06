@@ -1,42 +1,46 @@
 package grid
 
-enum class CellState {
-    UNKNOWN, FLAG, ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT;
+import grid.RealCell.*
+import grid.ImaginaryCell.*
+
+sealed interface ICellState
+
+sealed interface ImaginaryCell : ICellState {
+    object OUTSIDE : ImaginaryCell
 }
 
-val CellState.isHint
+sealed interface RealCell : ImaginaryCell {
+    object UNKNOWN : RealCell
+    object FLAGGED : RealCell
+    object ZERO : RealCell
+    object ONE : RealCell
+    object TWO : RealCell
+    object THREE : RealCell
+    object FOUR : RealCell
+    object FIVE : RealCell
+    object SIX : RealCell
+    object SEVEN : RealCell
+    object EIGHT : RealCell
+}
+
+val ICellState.isHint
     get() = when (this) {
-        CellState.ZERO, CellState.ONE, CellState.TWO, CellState.THREE, CellState.FOUR, CellState.FIVE, CellState.SIX, CellState.SEVEN, CellState.EIGHT -> true
-        else -> false
+        ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT -> true
+        UNKNOWN, FLAGGED, OUTSIDE -> false
     }
 
-val CellState.hintNumber
+val ICellState.hintNumber
     get() = when (this) {
-        CellState.ZERO -> 0
-        CellState.ONE -> 1
-        CellState.TWO -> 2
-        CellState.THREE -> 3
-        CellState.FOUR -> 4
-        CellState.FIVE -> 5
-        CellState.SIX -> 6
-        CellState.SEVEN -> 7
-        CellState.EIGHT -> 8
-        CellState.UNKNOWN, CellState.FLAG -> throw IllegalArgumentException()
+        ZERO -> 0
+        ONE -> 1
+        TWO -> 2
+        THREE -> 3
+        FOUR -> 4
+        FIVE -> 5
+        SIX -> 6
+        SEVEN -> 7
+        EIGHT -> 8
+        UNKNOWN, FLAGGED, OUTSIDE -> throw IllegalArgumentException()
     }
 
-fun CellState.hintFollows(predicate: (Int) -> Boolean) = isHint && predicate(hintNumber)
-
-
-val Int.asState
-    get() = when (this) {
-        0 -> CellState.ZERO
-        1 -> CellState.ONE
-        2 -> CellState.TWO
-        3 -> CellState.THREE
-        4 -> CellState.FOUR
-        5 -> CellState.FIVE
-        6 -> CellState.SIX
-        7 -> CellState.SEVEN
-        8 -> CellState.EIGHT
-        else -> throw IllegalArgumentException()
-    }
+fun ICellState.hintFollows(predicate: (Int) -> Boolean) = isHint && predicate(hintNumber)

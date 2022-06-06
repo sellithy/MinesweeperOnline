@@ -1,8 +1,10 @@
 package grid
 
-data class Position(val row: Int, val column: Int){
+data class Position(val row: Int, val column: Int) {
     override fun toString() = "($row, $column)"
 }
+
+operator fun Position.plus(other: Position) = Position(row + other.row, column + other.column)
 
 val Position.top get() = Position(row - 1, column)
 val Position.topRight get() = Position(row - 1, column + 1)
@@ -15,17 +17,16 @@ val Position.bottom get() = Position(row + 1, column)
 val Position.bottomRight get() = Position(row + 1, column + 1)
 val Position.bottomLeft get() = Position(row + 1, column - 1)
 
-val Position.neighbours get() = sequence {
-    yield(top)
-    yield(topLeft)
-    yield(topRight)
+val Position.neighbours
+    get() = sequence {
+        yield(top)
+        yield(topLeft)
+        yield(topRight)
 
-    yield(left)
-    yield(right)
+        yield(left)
+        yield(right)
 
-    yield(bottom)
-    yield(bottomLeft)
-    yield(bottomRight)
-}
-
-infix fun Int.pos(that: Int) = Position(this, that)
+        yield(bottom)
+        yield(bottomLeft)
+        yield(bottomRight)
+    }
