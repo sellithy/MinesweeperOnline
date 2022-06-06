@@ -53,7 +53,7 @@ val m = Mold {
     }
     row {
 //        +ImaginaryCell.OUTSIDE
-        +RealCell.ZERO or RealCell.TWO
+        +RealCell.ZERO
         +RealCell.ZERO
     }
 }

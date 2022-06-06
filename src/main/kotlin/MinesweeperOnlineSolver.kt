@@ -15,7 +15,7 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
         get("https://minesweeper.online/new-game/ng")
     }
     private val actions = Actions(driver)
-    private val grid = Grid(16, 16)
+    private val grid = ActualGrid(16, 16)
     private val posToDiv: Map<Position, WebElement>
 
     init {
@@ -44,7 +44,7 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
 
             if (classes.contains("hd_opened")) grid[pos] =
                 classes.first { it.startsWith("hd_type") }.last().digitToInt().asState
-            else if (classes.contains("hd_flag")) grid[pos] = RealCellState.FLAG
+            else if (classes.contains("hd_flag")) grid[pos] = RealCell.FLAGGED
         }
     }
 
@@ -56,7 +56,7 @@ class MinesweeperOnlineSolver(path: String, private val flagMines: Boolean = fal
                 ActionType.FLAG -> if (flagMines)
                     actions.contextClick(posToDiv[pos])
                 else
-                    grid[pos] = RealCellState.FLAG
+                    grid[pos] = RealCell.FLAGGED
 
             }
             changed = true
