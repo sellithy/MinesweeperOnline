@@ -4,11 +4,12 @@ import grid.*
 
 // TODO Change to context(Grid, ActionQueue) when bug is fixed
 // This should be a rule that is applied on a cell with a hint and that hint is not 0
-typealias HintRule = Grid.(ActionQueue, Position, RealCellState) -> Unit
+typealias HintRule = ActualGrid.(ActionQueue, Position, RealCell) -> Unit
 
-val rules = listOf<HintRule>(Grid::openWhenDone, Grid::flagWhenDone)
+val nonZeroRules = listOf<HintRule>(ActualGrid::openWhenDone, ActualGrid::flagWhenDone)
+val zeroRules = listOf<HintRule>(ActualGrid::`1-1+`)
 
-fun Grid.solve(): Set<CellAction> {
+fun ActualGrid.solve(numMines: Int): Set<CellAction> {
     val queue = ActionQueue()
     var prevCount = -1
     while (prevCount != queue.count()) {
@@ -16,7 +17,9 @@ fun Grid.solve(): Set<CellAction> {
 
         for ((position, state) in this) {
             if (state.hintFollows { it != 0 }) {
-                rules.forEach { it(this, queue, position, state) }
+                nonZeroRules.forEach { it(this, queue, position, state) }
+            } else {
+                zeroRules.forEach { it(this, queue, position, state) }
             }
         }
     }
@@ -27,12 +30,41 @@ fun Grid.solve(): Set<CellAction> {
     return queue
 }
 
-fun Grid.openWhenDone(queue: ActionQueue, position: Position, state: RealCellState) {
+fun ActualGrid.openWhenDone(queue: ActionQueue, position: Position, state: RealCell) {
     if (state.hintFollows(position.numNeighbouringFlags::equals))
         with(queue) { position.neighbouringUnknowns.positions.openAll() }
 }
 
-fun Grid.flagWhenDone(queue: ActionQueue, position: Position, state: RealCellState) {
+fun ActualGrid.flagWhenDone(queue: ActionQueue, position: Position, state: RealCell) {
     if (state.hintFollows((position.numNeighbouringFlags + position.numNeighbouringUnknowns)::equals))
         with(queue) { position.neighbouringUnknowns.positions.flagAll() }
+}
+
+val m = Mold {
+    row {
+//        +ImaginaryCell.OUTSIDE
+        +RealCell.UNKNOWN
+        +RealCell.UNKNOWN
+    }
+    row {
+//        +ImaginaryCell.OUTSIDE
+        +RealCell.ONE
+        +RealCell.ONE
+    }
+    row {
+//        +ImaginaryCell.OUTSIDE
+        +RealCell.ZERO or RealCell.TWO
+        +RealCell.ZERO
+    }
+}
+
+@Suppress("FunctionName")
+fun ActualGrid.`1-1+`(queue: ActionQueue, position: Position, state: RealCell) {
+    with(queue) {
+        if (m.matches(this@ActualGrid, position)) {
+            position.right.right.open()
+            position.right.right.bottom.open()
+            position.right.right.bottom.bottom.open()
+        }
+    }
 }
