@@ -27,7 +27,7 @@ fun test(){
         this[3, 0] = RealCell.UNKNOWN
         this[3, 1] = RealCell.UNKNOWN
         this[3, 2] = RealCell.UNKNOWN
-        this[3, 3] = RealCell.UNKNOWN
+        this[3, 3] = RealCell.ONE
     }
 
     println(grid.solve(1))
