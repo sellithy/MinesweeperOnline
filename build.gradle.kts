@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.0"
     application
 }
 
@@ -10,8 +10,13 @@ repositories {
 }
 
 dependencies {
-    implementation("com.sikulix:sikulixapi:2.0.5")
     implementation("org.seleniumhq.selenium:selenium-firefox-driver:4.1.4")
+
+    testImplementation(kotlin("test"))
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {
