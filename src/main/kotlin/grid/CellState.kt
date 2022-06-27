@@ -3,13 +3,23 @@ package grid
 import grid.RealCell.*
 import grid.ImaginaryCell.*
 
-sealed interface ICellState
+sealed interface ICellState {
+    companion object {
+        val values = RealCell.values + ImaginaryCell.values
+    }
+}
 
 sealed interface ImaginaryCell : ICellState {
+    companion object {
+        val values = listOf(OUTSIDE)
+    }
     object OUTSIDE : ImaginaryCell
 }
 
 sealed interface RealCell : ImaginaryCell {
+    companion object {
+        val values = listOf(UNKNOWN, FLAGGED, ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT)
+    }
     object UNKNOWN : RealCell
     object FLAGGED : RealCell
     object ZERO : RealCell
