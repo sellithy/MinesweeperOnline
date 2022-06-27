@@ -16,11 +16,10 @@ fun ActualGrid.solve(numMines: Int): Set<CellAction> {
         prevCount = queue.count()
 
         for ((position, state) in this) {
-            if (state.hintFollows { it != 0 }) {
+            if (state.hintFollows { it != 0 })
                 nonZeroRules.forEach { it(this, queue, position, state) }
-            } else {
-                zeroRules.forEach { it(this, queue, position, state) }
-            }
+
+            zeroRules.forEach { it(this, queue, position, state) }
         }
     }
 
@@ -40,28 +39,25 @@ fun ActualGrid.flagWhenDone(queue: ActionQueue, position: Position, state: RealC
         with(queue) { position.neighbouringUnknowns.positions.flagAll() }
 }
 
-val m = Mold {
+val m = Mold.fromRows(1 pos 0) {
     row {
-//        +ImaginaryCell.OUTSIDE
         +RealCell.UNKNOWN
         +RealCell.UNKNOWN
     }
     row {
-//        +ImaginaryCell.OUTSIDE
         +RealCell.ONE
         +RealCell.ONE
     }
     row {
-//        +ImaginaryCell.OUTSIDE
-        +RealCell.ZERO
-        +RealCell.ZERO
+        !RealCell.FLAGGED - RealCell.UNKNOWN
+        !RealCell.FLAGGED - RealCell.UNKNOWN
     }
 }
 
-@Suppress("FunctionName")
+@Suppress("FunctionName", "UNUSED_PARAMETER")
 fun ActualGrid.`1-1+`(queue: ActionQueue, position: Position, state: RealCell) {
     with(queue) {
-        if (m.matches(this@ActualGrid, position)) {
+        if (m.matches(position)) {
             position.right.right.open()
             position.right.right.bottom.open()
             position.right.right.bottom.bottom.open()
