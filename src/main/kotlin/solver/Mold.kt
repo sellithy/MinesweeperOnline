@@ -3,7 +3,7 @@ package solver
 import grid.*
 
 
-class Mold private constructor(cells: MutableMap<Position, Set<ICellState>>, val origin: Position) :
+class Mold private constructor(cells: MutableMap<Position, Set<ICellState>>, private val origin: Position) :
     AbstractGrid<Set<ICellState>>(cells) {
 
     companion object{
@@ -14,7 +14,7 @@ class Mold private constructor(cells: MutableMap<Position, Set<ICellState>>, val
     fun matches(gridPos: Position): Boolean {
         for ((moldPos, possibilities) in this) {
             @Suppress("INVALID_IF_AS_EXPRESSION_WARNING")
-            this@ActualGrid[gridPos + moldPos]?.let {
+            this@ActualGrid[gridPos + moldPos - origin]?.let {
                 if (it !in possibilities) return false
             } ?: if (ImaginaryCell.OUTSIDE !in possibilities) return false
         }

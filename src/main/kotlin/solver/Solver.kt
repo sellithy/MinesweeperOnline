@@ -58,9 +58,9 @@ val m = Mold.fromRows(1 pos 0) {
 fun ActualGrid.`1-1+`(queue: ActionQueue, position: Position, state: RealCell) {
     with(queue) {
         if (m.matches(position)) {
+            position.right.right.top.open()
             position.right.right.open()
             position.right.right.bottom.open()
-            position.right.right.bottom.bottom.open()
         }
     }
 }
