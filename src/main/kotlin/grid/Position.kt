@@ -5,6 +5,7 @@ data class Position(val row: Int, val column: Int) {
 }
 
 operator fun Position.plus(other: Position) = Position(row + other.row, column + other.column)
+operator fun Position.minus(other: Position) = Position(row - other.row, column - other.column)
 
 val Position.top get() = Position(row - 1, column)
 val Position.topRight get() = Position(row - 1, column + 1)
